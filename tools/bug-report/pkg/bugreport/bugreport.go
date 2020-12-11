@@ -32,6 +32,7 @@ import (
 	"github.com/spf13/cobra"
 	"k8s.io/client-go/tools/clientcmd"
 
+	"istio.io/api/label"
 	analyzer_util "istio.io/istio/galley/pkg/config/analysis/analyzers/util"
 	"istio.io/istio/operator/pkg/util"
 	"istio.io/istio/pkg/config/resource"
@@ -52,7 +53,6 @@ import (
 
 const (
 	bugReportDefaultTimeout = 30 * time.Minute
-	istioRevisionLabel      = "istio.io/rev"
 )
 
 var (
@@ -196,8 +196,8 @@ func dumpRevisionsAndVersions(resources *cluster2.Resources, kubeconfig, configC
 func getIstioRevisions(resources *cluster2.Resources) []string {
 	revMap := make(map[string]struct{})
 	for _, podLabels := range resources.Labels {
-		for label, value := range podLabels {
-			if label == istioRevisionLabel {
+		for l, value := range podLabels {
+			if l == label.IstioRev {
 				revMap[value] = struct{}{}
 			}
 		}
