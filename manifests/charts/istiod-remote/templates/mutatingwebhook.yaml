@@ -1,15 +1,16 @@
 # Installed for each revision - not installed for cluster resources ( cluster roles, bindings, crds)
+{{- if .Values.revision }}
 {{- if not .Values.global.operatorManageWebhooks }}
 apiVersion: admissionregistration.k8s.io/v1beta1
 kind: MutatingWebhookConfiguration
 metadata:
 {{- if eq .Release.Namespace "istio-system"}}
-  name: istio-sidecar-injector{{- if not (eq .Values.revision "") }}-{{ .Values.revision }}{{- end }}
+  name: istio-sidecar-injector-{{ .Values.revision }}
 {{ else }}
-  name: istio-sidecar-injector{{- if not (eq .Values.revision "") }}-{{ .Values.revision }}{{- end }}-{{ .Release.Namespace }}
+  name: istio-sidecar-injector-{{ .Values.revision }}-{{ .Release.Namespace }}
 {{- end }}
   labels:
-    istio.io/rev: {{ .Values.revision | default "default" }}
+    istio.io/rev: {{ .Values.revision  }}
     install.operator.istio.io/owning-resource: {{ .Values.ownerName | default "unknown" }}
     operator.istio.io/component: "Pilot"
     app: sidecar-injector
@@ -21,7 +22,7 @@ webhooks:
       url: {{ .Values.istiodRemote.injectionURL }}
       {{- else }}
       service:
-        name: istiod{{- if not (eq .Values.revision "") }}-{{ .Values.revision }}{{- end }}
+        name: istiod-{{ .Values.revision }}
         namespace: {{ .Release.Namespace }}
         path: "/inject"
       {{- end }}
@@ -35,21 +36,6 @@ webhooks:
     failurePolicy: Fail
     admissionReviewVersions: ["v1beta1", "v1"]
     namespaceSelector:
-{{- if .Values.sidecarInjectorWebhook.enableNamespacesByDefault }}
-      matchExpressions:
-      - key: name
-        operator: NotIn
-        values:
-        - {{ .Release.Namespace }}
-      - key: istio-injection
-        operator: NotIn
-        values:
-        - disabled
-      - key: istio-env
-        operator: DoesNotExist
-      - key: istio.io/rev
-        operator: DoesNotExist
-{{- else if .Values.revision }}
       matchExpressions:
       - key: istio-injection
         operator: DoesNotExist
@@ -57,10 +43,6 @@ webhooks:
         operator: In
         values:
         - {{ .Values.revision }}
-{{- else }}
-      matchLabels:
-        istio-injection: enabled
-{{- end }}
 {{- if .Values.sidecarInjectorWebhook.objectSelector.enabled }}
     objectSelector:
 {{- if .Values.sidecarInjectorWebhook.objectSelector.autoInject }}
@@ -80,6 +62,7 @@ webhooks:
 {{- else }}
       matchLabels:
         "sidecar.istio.io/inject": "true"
+{{- end }}
 {{- end }}
 {{- end }}
 {{- end }}
