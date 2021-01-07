@@ -410,9 +410,7 @@ message GlobalConfig {
   // Controls whether one central istiod is enabled.
   google.protobuf.BoolValue centralIstiod = 63;
 
-  // Configures whether this control plane should be the default revision
-  string defaultRevision = 64;
-  // The next available key is 65
+  // The next available key is 64
 }
 
 // Configuration for Security Token Service (STS) server.
@@ -1097,6 +1095,8 @@ message Values {
   BaseConfig base = 37;
 
   IstiodRemoteConfig istiodRemote = 38;
+
+  bool defaultRevision = 39;
 }
 
 // GOTYPE: map[string]interface{}
