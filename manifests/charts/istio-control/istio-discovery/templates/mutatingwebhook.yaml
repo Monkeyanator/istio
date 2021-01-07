@@ -1,5 +1,5 @@
 # Installed for each revision - not installed for cluster resources ( cluster roles, bindings, crds)
-{{ - if .Values.revision }}
+{{- if .Values.revision }}
 {{- if not .Values.global.operatorManageWebhooks }}
 apiVersion: admissionregistration.k8s.io/v1beta1
 kind: MutatingWebhookConfiguration
