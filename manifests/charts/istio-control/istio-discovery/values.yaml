@@ -157,9 +157,6 @@ telemetry:
 # Revision is set as 'version' label and part of the resource names when installing multiple control planes.
 revision: ""
 
-# Default revision determines whether this installation should be the default for validation and injection
-defaultRevision: false
-
 # For Helm compatibility.
 ownerName: ""
 
