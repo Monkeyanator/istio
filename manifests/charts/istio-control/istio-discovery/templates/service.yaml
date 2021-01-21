@@ -35,6 +35,7 @@ spec:
     istio: pilot
     {{- end }}
 ---
+# istiod-default service, should be kept the same as istiod service except for the name
 {{ if or (eq .Values.revision "") (eq .Values.defaultRevision true) }}
 apiVersion: v1
 kind: Service

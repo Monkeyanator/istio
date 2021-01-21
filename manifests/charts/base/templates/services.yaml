@@ -35,8 +35,10 @@ spec:
   {{- end }}
 ---
 {{- end }}
+
+# istiod-default service, should be kept the same as istiod service except for the name
 {{ if or (eq .Values.revision "") (eq .Values.defaultRevision true) }}
-  {{- if .Values.global.remotePilotAddress }}
+{{- if .Values.global.remotePilotAddress }}
   {{- if .Values.pilot.enabled }}
   # when istiod is enabled in remote cluster, we can't use istiod service name
 apiVersion: v1
