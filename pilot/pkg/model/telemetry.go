@@ -142,7 +142,7 @@ func shallowMergeTracing(parent, child *tpb.Telemetry) *tpb.Telemetry {
 	}
 
 	// TODO: use wrapper in API to allow 0-valued override
-	if childTracing.GetRandomSamplingPercentage() != 0 {
+	if childTracing.GetRandomSamplingPercentage().GetValue() != 0 {
 		mergedTracing.RandomSamplingPercentage = childTracing.RandomSamplingPercentage
 	}
 
